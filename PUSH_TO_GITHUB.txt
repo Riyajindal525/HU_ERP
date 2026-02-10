@@ -1,0 +1,59 @@
+═══════════════════════════════════════════════════════════
+  GIT PUSH COMMANDS - Copy and Run These in PowerShell
+═══════════════════════════════════════════════════════════
+
+Step 1: Navigate to project folder
+───────────────────────────────────────────────────────────
+cd C:\Users\91637\Documents\erpcode\FinalErp
+
+
+Step 2: Commit with name "editview"
+───────────────────────────────────────────────────────────
+git commit -m "editview"
+
+
+Step 3: Push to GitHub
+───────────────────────────────────────────────────────────
+git push -u origin main
+
+
+═══════════════════════════════════════════════════════════
+  IF YOU GET AUTHENTICATION ERROR
+═══════════════════════════════════════════════════════════
+
+Option 1: Use GitHub Desktop (Easiest)
+───────────────────────────────────────────────────────────
+1. Open GitHub Desktop
+2. Select your repository
+3. Click "Commit to main"
+4. Click "Push origin"
+
+
+Option 2: Use Personal Access Token
+───────────────────────────────────────────────────────────
+1. Go to: https://github.com/settings/tokens
+2. Click "Generate new token (classic)"
+3. Name it: "ERP Project"
+4. Check: "repo" permission
+5. Click "Generate token"
+6. Copy the token
+7. Run: git push -u origin main
+8. Username: rahulramteke12
+9. Password: [paste your token here]
+
+
+Option 3: Use SSH (if configured)
+───────────────────────────────────────────────────────────
+git remote set-url origin git@github.com:rahulramteke12/HU_new_ERP.git
+git push -u origin main
+
+
+═══════════════════════════════════════════════════════════
+  SUMMARY
+═══════════════════════════════════════════════════════════
+✅ All changes are staged (107 files)
+✅ Remote URL: https://github.com/rahulramteke12/HU_new_ERP.git
+✅ Commit message: "editview"
+✅ Ready to push!
+
+Just copy the commands above and run them in PowerShell!
