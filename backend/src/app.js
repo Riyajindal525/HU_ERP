@@ -34,7 +34,6 @@ app.use(
 const allowedOrigins = [
   'http://localhost:5173',
   'https://hu-erp.vercel.app',
-  'https://hu-aa0zttswp-riyajindal525s-projects.vercel.app',
 ];
 
 app.use(
@@ -43,21 +42,28 @@ app.use(
       // Allow Postman / curl
       if (!origin) return callback(null, true);
 
+      // Allow localhost
       if (allowedOrigins.includes(origin)) {
+        return callback(null, true);
+      }
+
+      // 🔑 Allow ALL Vercel preview deployments
+      if (origin.endsWith('.vercel.app')) {
         return callback(null, true);
       }
 
       console.error('❌ CORS blocked origin:', origin);
       return callback(new Error('Not allowed by CORS'));
     },
-    credentials: true, // 🔑 REQUIRED for cookies / refresh token
+    credentials: true,
     methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'OPTIONS'],
     allowedHeaders: ['Content-Type', 'Authorization'],
   })
 );
 
-// 🔑 VERY IMPORTANT (preflight fix)
+// 🔑 Preflight fix (VERY IMPORTANT)
 app.options('*', cors());
+
 
 // Body parsers
 app.use(express.json({ limit: '10mb' }));
