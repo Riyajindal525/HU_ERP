@@ -1,6 +1,9 @@
 import { Link } from 'react-router-dom';
 import useScrollReveal from "@/hooks/useScrollReveal";
 import { useState, useEffect } from "react";
+import heroImage from "@/assets/HeroImage.avif";
+import logoImage from "@/assets/logo.avif";
+
 
 import {
   BookOpen,
@@ -38,11 +41,8 @@ const Landing = () => {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between h-16 items-center">
             <div className="flex items-center">
-              <img
-                src="/src/assets/logo.avif"
-                alt="Haridwar University Logo"
-                className="w-[140px] h-[42px] sm:w-[160px] sm:h-[48px] object-contain"
-              />
+              <img src={logoImage} className="w-[120px] object-contain" alt="Logo" />
+
             </div>
             {/* Desktop Menu */}
             <div className="hidden md:flex items-center space-x-8">
@@ -78,7 +78,8 @@ const Landing = () => {
         <div
           className="absolute inset-0 bg-cover bg-center transition-opacity duration-500"
           style={{
-            backgroundImage: "url('/src/assets/HeroImage.avif')",
+           backgroundImage: `url(${heroImage})`
+,
           }}
         ></div>
         <div className="absolute inset-0 bg-black/40 dark:bg-black/70"></div>
@@ -356,11 +357,8 @@ const Landing = () => {
                         <div className="col-span-1 md:col-span-1">
                         <div className="flex items-center mb-6">
   <div className="bg-white px-3 py-2 rounded-xl shadow-sm">
-    <img
-      src="/src/assets/logo.avif"
-      alt="Haridwar University Logo"
-      className="w-[180px] h-[60px] object-contain"
-    />
+    <img src={logoImage} className="w-[120px] object-contain" alt="Logo" />
+
   </div>
 </div>
 
