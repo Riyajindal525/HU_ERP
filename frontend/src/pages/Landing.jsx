@@ -2,7 +2,7 @@ import { Link } from 'react-router-dom';
 import useScrollReveal from "@/hooks/useScrollReveal";
 import { useState, useEffect } from "react";
 import heroImage from "@/assets/HeroImage.avif";
-import logoImage from "@/assets/logo.avif";
+import logoImage from "@/assets/Logo.avif";
 
 
 import {
