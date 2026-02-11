@@ -14,7 +14,7 @@ const api = axios.create({
     'Content-Type': 'application/json',
   },
   withCredentials: true, // Important for cookies
-  timeout: 30000, // 30 second timeout
+  timeout: 550000, // 55 second timeout
 });
 
 // Request interceptor
