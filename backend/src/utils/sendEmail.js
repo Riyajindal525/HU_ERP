@@ -1,34 +1,24 @@
-import nodemailer from "nodemailer";
+import sgMail from "@sendgrid/mail";
+import env from "../config/env.js"; // adjust path if needed
 
-/**
- * Send email using SendGrid SMTP
- * @param {Object} options
- * @param {string} options.email
- * @param {string} options.subject
- * @param {string} options.message
- * @param {string} options.html
- */
+sgMail.setApiKey(env.SENDGRID_API_KEY);
+
 const sendEmail = async (options) => {
-  const transporter = nodemailer.createTransport({
-    host: "smtp.sendgrid.net",
-    port: 587,
-    secure: false, // MUST be false for SendGrid
-    auth: {
-      user: "apikey", // ⚠️ MUST be literally "apikey"
-      pass: process.env.SENDGRID_API_KEY,
-    },
-  });
+  try {
+    const msg = {
+      to: options.email,
+      from: `${env.EMAIL_FROM_NAME || "Haridwar University ERP"} <${env.SENDGRID_FROM_EMAIL}>`,
+      subject: options.subject,
+      text: options.message,
+      html: options.html,
+    };
 
-  const message = {
-    from: `${process.env.EMAIL_FROM_NAME} <${process.env.SENDGRID_FROM_EMAIL}>`,
-    to: options.email,
-    subject: options.subject,
-    text: options.message,
-    html: options.html,
-  };
-
-  const info = await transporter.sendMail(message);
-  console.log("SendGrid Email sent:", info.messageId);
+    await sgMail.send(msg);
+    console.log("✅ SendGrid Email Sent Successfully");
+  } catch (error) {
+    console.error("❌ SendGrid Email Error:", error.response?.body || error.message);
+    throw error;
+  }
 };
 
 export default sendEmail;
