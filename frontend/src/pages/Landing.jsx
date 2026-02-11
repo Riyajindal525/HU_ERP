@@ -97,11 +97,7 @@ const Landing = () => {
           >
             {/* Header */}
             <div className="flex items-center justify-between p-6 border-b dark:border-gray-700">
-              <img
-                src="/src/assets/logo.avif"
-                className="w-[120px] object-contain"
-                alt="Logo"
-              />
+              <img src={logoImage} className="w-[120px] object-contain" alt="Logo" />
               <button
                 onClick={() => setIsOpen(false)}
                 className="p-2 rounded-full hover:bg-gray-100 dark:hover:bg-gray-800 transition"
