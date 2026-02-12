@@ -91,11 +91,12 @@ const StudentManagement = () => {
         onError: (error) => toast.error('Failed to delete student')
     });
 
-    // Fetch Fees (for dropdown)
-    const { data: feesData } = useQuery({
-        queryKey: ['fees'],
-        queryFn: () => feeService.getAll()
-    });
+    // Fetch Fees (for dropdown) - Disabled until fees endpoint is implemented
+    // const { data: feesData } = useQuery({
+    //     queryKey: ['fees'],
+    //     queryFn: () => feeService.getAll()
+    // });
+    const feesData = null; // Placeholder until fees endpoint is ready
 
     return (
         <div>
@@ -422,10 +423,23 @@ const StudentManagement = () => {
                             <form onSubmit={(e) => {
                                 e.preventDefault();
                                 const formData = new FormData(e.target);
-                                createStudentMutation.mutate({
+                                
+                                // Get password from form (admin can set it)
+                                const password = formData.get('password')?.trim();
+                                
+                                console.log('🔐 Password from form:', password ? `${password.length} chars` : 'EMPTY');
+                                
+                                // Validate password length
+                                if (!password || password.length < 8) {
+                                    toast.error(`Password must be at least 8 characters (current: ${password?.length || 0})`);
+                                    return;
+                                }
+                                
+                                const studentData = {
                                     firstName: formData.get('firstName'),
                                     lastName: formData.get('lastName'),
                                     email: formData.get('email'),
+                                    password: password, // Use admin-provided password
                                     role: 'STUDENT',
                                     enrollmentNumber: formData.get('enrollmentNumber'),
                                     dateOfBirth: formData.get('dateOfBirth'),
@@ -443,7 +457,14 @@ const StudentManagement = () => {
                                         pincode: formData.get('pincode'),
                                         country: formData.get('country') || 'India'
                                     }
+                                };
+                                
+                                console.log('📝 Creating student with data:', {
+                                    ...studentData,
+                                    password: '***' + password.slice(-3) // Show last 3 chars for debugging
                                 });
+                                
+                                createStudentMutation.mutate(studentData);
                             }}>
                                 <div className="space-y-6">
                                     {/* Personal Information */}
@@ -499,6 +520,23 @@ const StudentManagement = () => {
                                                     placeholder="student@university.ac.in"
                                                     required
                                                 />
+                                            </div>
+                                            <div>
+                                                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+                                                    Password <span className="text-red-500">*</span>
+                                                </label>
+                                                <input
+                                                    name="password"
+                                                    type="password"
+                                                    className="input w-full"
+                                                    placeholder="Minimum 8 characters"
+                                                    minLength="8"
+                                                    defaultValue="Student@123"
+                                                    required
+                                                />
+                                                <p className="text-xs text-gray-500 mt-1">
+                                                    Default: Student@123 (Student can change after login)
+                                                </p>
                                             </div>
                                             <div>
                                                 <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">

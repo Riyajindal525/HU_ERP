@@ -10,10 +10,15 @@ class StudentController {
    * POST /api/v1/students
    */
   create = asyncHandler(async (req, res) => {
+    // Log the entire request body for debugging
+    console.log('🔍 BACKEND RECEIVED req.body:', JSON.stringify(req.body, null, 2));
+    console.log('🔑 Password field:', req.body.password ? `${req.body.password.length} chars` : 'MISSING');
+    
     const { 
       firstName, 
       lastName, 
       email, 
+      password, // Accept password from admin
       role,
       enrollmentNumber,
       dateOfBirth,
@@ -47,13 +52,17 @@ class StudentController {
       }
     }
 
-    // Generate temporary password (6 digits)
-    const tempPassword = Math.floor(100000 + Math.random() * 900000).toString();
+    // Generate a strong default password
+    const studentPassword = password && password.length >= 8 
+      ? password 
+      : 'Student@123456'; // Strong default password
+
+    console.log('🔑 Using password:', studentPassword.length, 'characters');
 
     // Create user account
     const user = await User.create({
       email,
-      password: tempPassword,
+      password: studentPassword,
       role: role || 'STUDENT',
       firstName,
       lastName,
@@ -79,14 +88,14 @@ class StudentController {
       status: 'ACTIVE'
     });
 
-    // Log the temporary password (in production, send via email)
+    // Log the password (in production, send via email)
     console.log('##################################################');
     console.log(`# Student Account Created`);
     console.log(`# Name: ${firstName} ${lastName}`);
     console.log(`# Email: ${email}`);
     console.log(`# Enrollment Number: ${enrollmentNumber || 'Not provided'}`);
-    console.log(`# Temporary Password: ${tempPassword}`);
-    console.log(`# User should login with OTP instead`);
+    console.log(`# Password: ${studentPassword}`);
+    console.log(`# User can login with OTP or password`);
     console.log('##################################################');
 
     res.status(201).json({
@@ -95,7 +104,7 @@ class StudentController {
       data: {
         user: user.toJSON(),
         student,
-        tempPassword, // Send in response for admin to share
+        password: studentPassword, // Send in response for admin to share
       },
     });
   });
