@@ -21,6 +21,13 @@ const api = axios.create({
 api.interceptors.request.use(
   (config) => {
     console.log('🔵 API Request:', config.method.toUpperCase(), config.url);
+    
+    // Debug student creation requests
+    if (config.url === '/students' && config.method === 'post') {
+      console.log('🔍 FRONTEND SENDING DATA:', JSON.stringify(config.data, null, 2));
+      console.log('🔑 Password in request:', config.data?.password ? `${config.data.password.length} chars` : 'MISSING');
+    }
+    
     const token = localStorage.getItem('accessToken');
     if (token) {
       config.headers.Authorization = `Bearer ${token}`;
@@ -50,8 +57,12 @@ api.interceptors.response.use(
 
     const originalRequest = error.config;
 
-    // If error is 401 and we haven't tried to refresh token yet
-    if (error.response?.status === 401 && !originalRequest._retry) {
+    // Handle expired token (401 or 500 with "Access token expired" message)
+    const isTokenExpired = 
+      error.response?.status === 401 || 
+      (error.response?.status === 500 && error.response?.data?.message?.includes('Access token expired'));
+
+    if (isTokenExpired && !originalRequest._retry) {
       originalRequest._retry = true;
 
       try {
@@ -69,10 +80,15 @@ api.interceptors.response.use(
         originalRequest.headers.Authorization = `Bearer ${accessToken}`;
         return api(originalRequest);
       } catch (refreshError) {
-        // Refresh failed, logout user
+        // Refresh failed, clear tokens and redirect to login
         console.error('🔴 Token refresh failed:', refreshError);
         localStorage.removeItem('accessToken');
-        window.location.href = '/login';
+        localStorage.removeItem('refreshToken');
+        
+        // Only redirect if not already on login page
+        if (!window.location.pathname.includes('/login')) {
+          window.location.href = '/login';
+        }
         return Promise.reject(refreshError);
       }
     }

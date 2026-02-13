@@ -34,7 +34,10 @@ export const useAuth = () => {
           }
         } catch (error) {
           console.error('Auth initialization failed:', error);
+          // Clear expired or invalid token
           localStorage.removeItem('accessToken');
+          localStorage.removeItem('refreshToken');
+          dispatch(clearCredentials());
         } finally {
           dispatch(setLoading(false));
         }

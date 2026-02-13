@@ -80,6 +80,12 @@ app.use((req, res, next) => {
     console.log('Raw request body:', req.body);
     console.log('Content-Type:', req.get('Content-Type'));
   }
+  if (req.path === '/api/v1/students' && req.method === 'POST') {
+    console.log('=== STUDENT CREATE MIDDLEWARE DEBUG ===');
+    console.log('Raw request body:', JSON.stringify(req.body, null, 2));
+    console.log('Password field:', req.body.password ? `${req.body.password.length} chars` : 'MISSING');
+    console.log('Content-Type:', req.get('Content-Type'));
+  }
   next();
 });
 

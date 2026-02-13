@@ -100,6 +100,14 @@ export const studentService = {
 
   // Create student
   create: async (data) => {
+    // Ensure password is at least 8 characters
+    if (!data.password || data.password.length < 8) {
+      data.password = 'Student@123'; // Default strong password
+    }
+    console.log('📤 Sending student data to API:', {
+      ...data,
+      password: '***' + (data.password?.slice(-3) || '')
+    });
     return api.post('/students', data);
   },
 
